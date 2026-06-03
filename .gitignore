@@ -1,37 +1,25 @@
-# ========================
 # CMake 构建输出
-# ========================
 build/
 cmake-build-*/
-out/
 
-# ========================
-# Qt Creator / Qt Design Studio
-# ========================
+# Qt Creator / Qt Design Studio 用户配置
 CMakeLists.txt.user
 CMakeLists.txt.user.*
+CMakeLists.txt.shared
+MotolControlQml.qmlproject.qtds
 .qtcreator/
 *.autosave
 
-# ========================
 # Qt 编译生成文件
-# ========================
 moc_*.cpp
 moc_*.h
 qrc_*.cpp
 ui_*.h
 *.qm
-
-# QML 缓存和编译输出
 *.qmlc
 *.jsc
-qmlcache/
-*.qmlcache.h
-*.qmlcache.cpp
 
-# ========================
-# 编译输出
-# ========================
+# 编译产物
 *.o
 *.obj
 *.exe
@@ -41,59 +29,9 @@ qmlcache/
 *.a
 *.lib
 *.pdb
-*.ilk
-*.exp
 
-# ========================
-# Visual Studio
-# ========================
-.vs/
-*.vcxproj
-*.vcxproj.filters
-*.vcxproj.user
-*.sln
-*.suo
-*.ncb
-*.sdf
-*.opensdf
-ipch/
+# 自动生成的资源目录（用于存放导入的 3D 资源）
+Generated/
 
-# ========================
-# IDE 和编辑器
-# ========================
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-.DS_Store
+# Windows 系统文件
 Thumbs.db
-
-# ========================
-# Qt 资源编译输出
-# ========================
-.qmake.stash
-Makefile*
-!CMakeLists.txt
-
-# ========================
-# 部署和打包
-# ========================
-*.apk
-*.aab
-*.ipa
-*.dmg
-*.wgt
-
-# ========================
-# 日志和临时文件
-# ========================
-*.log
-*.tmp
-*.temp
-
-# ========================
-# Python（如有辅助脚本）
-# ========================
-__pycache__/
-*.py[cod]
