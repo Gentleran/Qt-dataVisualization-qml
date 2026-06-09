@@ -9,6 +9,7 @@ Check out https://doc.qt.io/qtcreator/creator-quick-ui-forms.html for details on
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import MotolControlQml
 
 Rectangle {
     id: background
@@ -54,17 +55,22 @@ Rectangle {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 15
-
+        spacing: 15
         // --- 第一部分：标题 ---
         SectionHeader {
             Layout.fillWidth: true
             titleText: "IP设置"
         }
-        RowLayout {
 
+        GridLayout {
             anchors.leftMargin: 15 // 内部左边距
             anchors.rightMargin: 15 // 内部右边距
-            spacing: 10
+            anchors.topMargin: 15
+
+            columns: 2
+            rowSpacing: 15
+            columnSpacing: 15
+            Layout.fillWidth: true
 
             // 左侧文本
             Label {
@@ -75,14 +81,46 @@ Rectangle {
                 Layout.alignment: Qt.AlignVCenter // 垂直居中
             }
 
-            Item {
-                Layout.fillWidth: true // 占据中间剩余空间，把开关推到最右边
-            }
-
             // 右侧开关
             SwitchMy {
-                Layout.alignment: Qt.AlignVCenter // 垂直居中
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                checked: TcpClientManager.impl.connected
+                onCheckedChanged: {
+                    if(checked){
+                        TcpClientManager.connectToServer()
+                    } else if(!checked){
+                        TcpClientManager.disconnectFromServer()
+                    }
+                }
+
             }
+
+            Label {
+                text: "IP地址:"
+                font.pixelSize: 26
+                color: "#333333"
+                Layout.alignment: Qt.AlignVCenter
+            }
+
+            TextField {
+                id: ipAddressField
+                placeholderText: "请输入IP地址"
+                text: TcpClientManager.impl.hostAddress
+                onTextChanged: {
+                    TcpClientManager.impl.hostAddress = text
+                }
+                Layout.fillWidth: true
+                Layout.preferredHeight: 50
+                font.pixelSize: 25
+                background: Rectangle {
+                    color: "white"
+                    border.color: "gray"
+                    border.width: 3
+                    radius: 8
+                }
+            }
+
+            
         }
 
         Item {

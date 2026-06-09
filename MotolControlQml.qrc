@@ -5,8 +5,10 @@
         <file>MotolControlQml/EventListModel.qml</file>
         <file>MotolControlQml/EventListSimulator.qml</file>
         <file>MotolControlQml/qmldir</file>
+        <file>MotolControlQml/TcpClientManager.qml</file>
+        <file>MotolControlQml/TcpClientMock.qml</file>
         <file>MotolControlQmlContent/App.qml</file>
-        <file>MotolControlQmlContent/LeftPanel.ui.qml</file>
+        <file>MotolControlQmlContent/LeftPanel.qml</file>
         <file>MotolControlQmlContent/Screen01.ui.qml</file>
         <file>MotolControlQmlContent/SwitchMy.ui.qml</file>
         <file>qtquickcontrols2.conf</file>

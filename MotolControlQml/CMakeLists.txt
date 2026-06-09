@@ -6,6 +6,16 @@ set_source_files_properties(Constants.qml
         QT_QML_SINGLETON_TYPE true
 )
 
+set_source_files_properties(TcpClientManager.qml
+    PROPERTIES
+        QT_QML_SINGLETON_TYPE true
+)
+
+set_source_files_properties(TcpClientMock.qml
+    PROPERTIES
+        QT_QML_SINGLETON_TYPE true
+)
+
 
 
 qt_add_library(MotolControlQml STATIC)
@@ -17,6 +27,8 @@ qt6_add_qml_module(MotolControlQml
         "Constants.qml"
         "EventListModel.qml"
         "EventListSimulator.qml"
+        "TcpClientManager.qml"
+        "TcpClientMock.qml"
 )
 
 

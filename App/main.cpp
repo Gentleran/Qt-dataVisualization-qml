@@ -3,8 +3,11 @@
 
 #include <QApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
 
 #include "autogen/environment.h"
+
+#include "tcpclient.h"
 
 int main(int argc, char *argv[])
 {
@@ -12,6 +15,14 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+
+    TcpClient *tcpClient = new TcpClient(&engine);
+    qmlRegisterSingletonInstance<TcpClient>(
+        "MotolControlQml",
+        1, 0,
+        "TcpClient",
+        tcpClient);
+
     const QUrl url(mainQmlFile);
     QObject::connect(
                 &engine, &QQmlApplicationEngine::objectCreated, &app,

@@ -1,4 +1,8 @@
 module MotolControlQml
 singleton Constants 1.0 Constants.qml
+
+singleton TcpClientManager 1.0 TcpClientManager.qml
+singleton TcpClientMock 1.0 TcpClientMock.qml
+
 EventListSimulator 1.0 EventListSimulator.qml
 EventListModel 1.0 EventListModel.qml
