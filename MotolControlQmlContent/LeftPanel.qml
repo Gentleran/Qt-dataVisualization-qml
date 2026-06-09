@@ -9,15 +9,35 @@ Check out https://doc.qt.io/qtcreator/creator-quick-ui-forms.html for details on
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 import MotolControlQml
 
 Rectangle {
     id: background
 
-    implicitWidth: 300
+    implicitWidth: 400
     implicitHeight: 700
 
     radius: 10
+
+    FolderDialog {
+        id: folderDialog
+        title: "选择录波存放文件夹"
+        currentFolder: savePathText.text
+        onAccepted:{
+            var path = selectedFolder.toString()
+            if(path.startsWith("file:///")) {
+                path = path.substring(8)
+            }
+            else if(path.startsWith("file://")) {
+                path = path.replace("file://", "")
+            }
+            path = path.replace(/\\/g, "\\")
+
+            savePathText.text = path
+        }
+        
+    }
 
     // 分割线组件
     component SectionHeader: Item {
@@ -63,14 +83,15 @@ Rectangle {
         }
 
         GridLayout {
-            anchors.leftMargin: 15 // 内部左边距
-            anchors.rightMargin: 15 // 内部右边距
-            anchors.topMargin: 15
+            Layout.leftMargin: 8 // 内部左边距
+            Layout.rightMargin: 8 // 内部右边距
+            Layout.bottomMargin: 10
+            Layout.fillWidth: true
 
             columns: 2
             rowSpacing: 15
-            columnSpacing: 15
-            Layout.fillWidth: true
+            columnSpacing: 10
+
 
             // 左侧文本
             Label {
@@ -119,8 +140,77 @@ Rectangle {
                     radius: 8
                 }
             }
+        }
 
-            
+        SectionHeader {
+            Layout.fillWidth: true
+            titleText: "录波"
+        }
+
+        GridLayout{
+            Layout.leftMargin: 8 // 内部左边距
+            Layout.rightMargin: 8 // 内部右边距
+            Layout.bottomMargin: 10
+            Layout.fillWidth: true
+
+            columns: 2
+            rowSpacing: 15
+            columnSpacing: 10
+
+
+            Label {
+                text: "录波状态"
+                font.pixelSize: 26
+                color: "#333333"
+                Layout.alignment: Qt.AlignVCenter // 垂直居中
+                Layout.fillWidth: true
+            }
+
+            SwitchMy {
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                checked: false
+            }
+
+            Label {
+                text: "保存路径:"
+                font.pixelSize: 26
+                color: "#333333"
+                Layout.alignment: Qt.AlignVCenter // 垂直居中
+                Layout.fillWidth: true
+            }
+
+            Button{
+                id: browseButton
+                text: "浏览"
+                Layout.preferredWidth: 100
+                Layout.preferredHeight: 50
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                font.pixelSize: 20
+                background: Rectangle {
+                    color: parent.hovered ? "#5a9cf0" : "#4a8fe0"
+                    radius: 8
+                }
+                onClicked:{
+                    folderDialog.open()
+                }
+            }
+
+            TextField {
+                id: savePathText
+                text: ""
+                font.pixelSize: 20
+                Layout.preferredHeight: 50
+                Layout.alignment: Qt.AlignVCenter
+                Layout.fillWidth: true
+                Layout.columnSpan: 2
+                Layout.topMargin: -8
+                background: Rectangle {
+                    color: "white"
+                    border.color: "gray"
+                    border.width: 3
+                    radius: 8
+                }
+            }
         }
 
         Item {
