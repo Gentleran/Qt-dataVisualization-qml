@@ -3,23 +3,25 @@
 
 #include <QObject>
 #include <QTcpSocket>
+#include <QList>
 
 class TcpClient : public QObject
 {
     Q_OBJECT    // 使类可被QML访问
 
-    Q_PROPERTY(QString hostAddress READ hostAddress WRITE setHostAddress NOTIFY hostAddressChanged) 
-    Q_PROPERTY(bool connected READ isConnected NOTIFY connectedChanged)                                  
+    Q_PROPERTY(QString hostAddress READ hostAddress WRITE setHostAddress NOTIFY hostAddressChanged)
+    Q_PROPERTY(bool connected READ isConnected NOTIFY connectedChanged)
 
 public:
-    explicit TcpClient(QObject *parent = nullptr);          
+    explicit TcpClient(QObject *parent = nullptr);       
+    ~TcpClient();   
 
 
 
     QString hostAddress() const;                           
     void setHostAddress(const QString &newHostAddress);     
 
-    bool isConnected() const;                 
+    bool isConnected() const;
 
     Q_INVOKABLE void connectToServer();        // 连接到服务器
     Q_INVOKABLE void disconnectFromServer();   // 断开与服务器的连接
@@ -44,8 +46,9 @@ private:
         bool connected;
     };
 
-    QString m_hostAddress;      // 服务器IP地址
-    QList<SocketConnect*> m_socketConnects;
+    QString m_hostAddress;                  // 服务器IP地址
+    QList<SocketConnect*> m_socketConnects; // 连接对象列表
+    bool m_isConnected;                     // 是否已连接
 
     void updateConnectedStatus();
 

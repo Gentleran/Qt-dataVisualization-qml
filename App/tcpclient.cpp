@@ -4,9 +4,21 @@
 TcpClient::TcpClient(QObject *parent)
     : QObject{parent}
     , m_hostAddress(ConstantConfig::DEFAULT_IP)
+    , m_isConnected(false)
 {
     addConnectionPort(ConstantConfig::DEFAULT_PORT_1);
     addConnectionPort(ConstantConfig::DEFAULT_PORT_2);
+}
+
+TcpClient::~TcpClient()
+{
+    for(const SocketConnect *conn : std::as_const(m_socketConnects)){
+        if(conn->socket){
+            conn->socket->disconnectFromHost();
+            conn->socket->deleteLater();
+        }
+    }
+    m_socketConnects.clear();
 }
 
 QString TcpClient::hostAddress() const
@@ -26,45 +38,34 @@ void TcpClient::setHostAddress(const QString &newHostAddress)
 
 bool TcpClient::isConnected() const
 {
-    // 检查所有端口是否已连接
-    for(SocketConnect *connect : m_socketConnects){
-        if(!connect->connected){
-            return false;
-        }
-    }
-    // 所有端口都已连接，返回true
-    return !m_socketConnects.isEmpty();
+    return m_isConnected;
 }
 
 void TcpClient::connectToServer()
 {
-    if (isConnected()){
-        qDebug() << "所有端口已已连接-无需重复连接";
-        return;
-    }
     // 连接所有端口
-    for(SocketConnect *connect : m_socketConnects){
-        connect->socket->connectToHost(m_hostAddress, connect->port);
+    for(const SocketConnect *conn : std::as_const(m_socketConnects)){
+        if(conn->socket->state() == QAbstractSocket::UnconnectedState){
+            conn->socket->connectToHost(m_hostAddress, conn->port);
+        }
     }
 }
 
 void TcpClient::disconnectFromServer()
 {
-    if(!isConnected()){
-        qDebug() << "所有端口未未连接-无需断开";
-        return;
-    }
     // 断开所有端口
-    for(SocketConnect *connect : m_socketConnects){
-        connect->socket->disconnectFromHost();
+    for(const SocketConnect *conn : std::as_const(m_socketConnects)){
+        if(conn->socket->state() == QAbstractSocket::ConnectedState){
+            conn->socket->disconnectFromHost();
+        }   
     }
 }
 
 void TcpClient::addConnectionPort(quint16 port)
 {
     // 检查端口是否已存在
-    for(SocketConnect *connect : m_socketConnects){
-        if(port == connect->port){
+    for(const SocketConnect *conn : std::as_const(m_socketConnects)){
+        if(port == conn->port){
             qDebug() << "端口" << port << "已存在-无需添加";
             return;
         }
@@ -78,6 +79,7 @@ void TcpClient::addConnectionPort(quint16 port)
     connect(cnt->socket, &QTcpSocket::readyRead, this, &TcpClient::onReadyRead);
     connect(cnt->socket, &QTcpSocket::connected, this, &TcpClient::onConnected);
     connect(cnt->socket, &QTcpSocket::disconnected, this, &TcpClient::onDisconnected);
+    connect(cnt->socket, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::errorOccurred), this, &TcpClient::onErrorOccurred);
 
     qDebug() << "端口" << port << "已添加";
 
@@ -85,7 +87,7 @@ void TcpClient::addConnectionPort(quint16 port)
 
 void TcpClient::onReadyRead()
 {
-    QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
+    QTcpSocket *socket = qobject_cast<QTcpSocket*>(sender());
     if(!socket){
         qDebug() << "onReadyRead: 未知的QTcpSocket";
         return;
@@ -98,54 +100,79 @@ void TcpClient::onReadyRead()
 
 void TcpClient::onConnected()
 {
-    QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
+    QTcpSocket *socket = qobject_cast<QTcpSocket*>(sender());
     if(!socket){
         qDebug() << "onConnected: 未知的QTcpSocket";
         return;
     }
     // 标记端口为已连接
-    for(SocketConnect *connect : m_socketConnects){
-        if(connect->socket == socket){
-            connect->connected = true;
-            updateConnectedStatus();    // 连接状态更新
-            qDebug() << "端口" << connect->port << "已成功连接";
+    for(SocketConnect *conn : std::as_const(m_socketConnects)){
+        if(conn->socket == socket){
+            conn->connected = true;
+            qDebug() << "端口" << conn->port << "已成功连接";
             break;
         }
     }
+    updateConnectedStatus();    // 连接状态更新
 }
 
 void TcpClient::onDisconnected()
 {
-    QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
+    QTcpSocket *socket = qobject_cast<QTcpSocket*>(sender());
     if(!socket){
         qDebug() << "onDisconnected: 未知的QTcpSocket";
         return;
     }
     // 标记端口为未连接
-    for(SocketConnect *connect : m_socketConnects){
-        if(connect->socket == socket){
-            connect->connected = false;
-            updateConnectedStatus();    // 连接状态更新
-            qDebug() << "端口" << connect->port << "已断开连接";
+    for(SocketConnect *conn : std::as_const(m_socketConnects)){
+        if(conn->socket == socket){
+            conn->connected = false;
+            qDebug() << "端口" << conn->port << "已断开连接";
             break;
         }
     }
+    updateConnectedStatus();    // 连接状态更新
+
 }
 
 void TcpClient::onErrorOccurred(QAbstractSocket::SocketError socketError)
 {
     Q_UNUSED(socketError)
+    QTcpSocket *socket = qobject_cast<QTcpSocket*>(sender());
+    if (!socket) {
+        qDebug() << "onErrorOccurred: 未知的QTcpSocket";
+        return;
+    }
+
+    QString errorMsg = socket->errorString();
+    qDebug() << "[TcpClient] Socket error:" << errorMsg;
+
+    for(SocketConnect *conn : std::as_const(m_socketConnects)) {
+        if (conn->socket == socket) {
+            conn->connected = false;
+            emit connectedChanged();
+            qDebug() << "端口" << conn->port << "发生错误:" << errorMsg;
+            break;
+        }
+    }
+    updateConnectedStatus();
     
 }
 
 void TcpClient::updateConnectedStatus()
 {
-    // 检查所有端口是否已连接
-    for(SocketConnect *connect : m_socketConnects){
-        if(!connect->connected){
-            return;
+    bool allConnected = !m_socketConnects.isEmpty();
+    for(SocketConnect *conn : std::as_const(m_socketConnects)){
+        if (!conn->connected) {
+            allConnected = false;
+            break;
         }
     }
-    // 所有端口都已连接，返回true
-    emit connectedChanged();
+
+    if (allConnected != m_isConnected) {
+        m_isConnected = allConnected;
+        emit connectedChanged();
+        qDebug() << "连接状态更新:" << m_isConnected;
+    }
+
 }
