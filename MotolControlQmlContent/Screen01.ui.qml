@@ -28,17 +28,10 @@ Rectangle {
 
             Layout.margins: 10
         }
-        Rectangle {
+        ChartPannel {
             Layout.fillHeight: true
             Layout.fillWidth: true
-            color: '#238a8a'
-            Layout.margins: 10
-            Text {
-                text: "右侧内容区域"
-                anchors.centerIn: parent
-                font.pixelSize: 20
-            }
+            // color: '#238a8a'
         }
     }
-
 }

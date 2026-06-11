@@ -8,6 +8,7 @@
         <file>MotolControlQml/TcpClientManager.qml</file>
         <file>MotolControlQml/TcpClientMock.qml</file>
         <file>MotolControlQmlContent/App.qml</file>
+        <file>MotolControlQmlContent/ChartPannel.qml</file>
         <file>MotolControlQmlContent/LeftPanel.qml</file>
         <file>MotolControlQmlContent/Screen01.ui.qml</file>
         <file>MotolControlQmlContent/SwitchMy.ui.qml</file>

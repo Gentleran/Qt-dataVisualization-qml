@@ -30,14 +30,7 @@ qt_add_resources(${CMAKE_PROJECT_NAME} "configuration"
     FILES
         qtquickcontrols2.conf)
 
-qt_add_qml_module(${CMAKE_PROJECT_NAME}
-    URI WaveformItem
-    VERSION 1.0
-    SOURCES
-        App/waveformitem.h App/waveformitem.cpp
-)
 
-target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/App)
 
 include(qds)
 

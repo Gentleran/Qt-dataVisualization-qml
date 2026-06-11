@@ -10,6 +10,7 @@ qt6_add_qml_module(MotolControlQmlContent
     RESOURCE_PREFIX "/qt/qml"
     QML_FILES
         "App.qml"
+        "ChartPannel.qml"
         "LeftPanel.qml"
         "Screen01.ui.qml"
         "SwitchMy.ui.qml"
