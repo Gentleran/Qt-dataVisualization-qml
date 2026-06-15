@@ -8,6 +8,7 @@
 #include "autogen/environment.h"
 
 #include "tcpclient.h"
+#include "waveformdatamodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -22,6 +23,13 @@ int main(int argc, char *argv[])
         1, 0,
         "TcpClient",
         tcpClient);
+
+    WaveformDataModel *waveformDataModel = new WaveformDataModel(&engine);
+    qmlRegisterSingletonInstance<WaveformDataModel>(
+        "MotolControlQml",
+        1, 0,
+        "WaveformDataModel",
+        waveformDataModel);
 
     const QUrl url(mainQmlFile);
     QObject::connect(

@@ -32,5 +32,4 @@ ui_*.h
 # Windows 系统文件
 Thumbs.db
 
-CMakeLists.txt.pKPbda
-CMakeLists.txt.pRFngW
+CMakeLists.txt.*

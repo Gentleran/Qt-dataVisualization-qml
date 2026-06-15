@@ -4,5 +4,10 @@ singleton Constants 1.0 Constants.qml
 singleton TcpClientManager 1.0 TcpClientManager.qml
 singleton TcpClientMock 1.0 TcpClientMock.qml
 
+singleton WaveformDataModelManager 1.0 WaveformDataModelManager.qml
+singleton WaveformDataModelMock 1.0 WaveformDataModelMock.qml
+
+
+
 EventListSimulator 1.0 EventListSimulator.qml
 EventListModel 1.0 EventListModel.qml

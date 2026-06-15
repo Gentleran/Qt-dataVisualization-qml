@@ -16,14 +16,14 @@ set(QML_IMPORT_PATH ${QT_QML_OUTPUT_DIRECTORY}
     FORCE
 )
 
-find_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Widgets Qml Quick QuickTimeline ShaderTools)
+find_package(Qt6 6.8 REQUIRED COMPONENTS Core Gui Widgets Qml Quick QuickTimeline ShaderTools Graphs)
 qt_standard_project_setup()
 
 
 qt_add_executable(${CMAKE_PROJECT_NAME}
     App/tcpclient.h App/tcpclient.cpp
     App/ConstantConfig.h
-    App/waveformitem.h App/waveformitem.cpp
+    App/waveformdatamodel.h App/waveformdatamodel.cpp
 )
 qt_add_resources(${CMAKE_PROJECT_NAME} "configuration"
     PREFIX "/"
@@ -31,10 +31,10 @@ qt_add_resources(${CMAKE_PROJECT_NAME} "configuration"
         qtquickcontrols2.conf)
 
 qt_add_qml_module(${CMAKE_PROJECT_NAME}
-    URI WaveformItem
+    URI WaveformDataModel
     VERSION 1.0
     SOURCES
-        App/waveformitem.h App/waveformitem.cpp
+        App/waveformdatamodel.h App/waveformdatamodel.cpp
 )
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/App)

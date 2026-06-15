@@ -1,17 +1,44 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import WaveformItem
+import QtGraphs
+import MotolControlQml
 
 Item {
     id: root
 
-    ColumnLayout{
+    Connections {
+        target: WaveformDataModelManager.impl
+        function onSamplesChanged() {
+            updateChart();
+        }
+    }
+
+    // Component.onCompleted: {
+    //     updateChart();
+    // }
+
+    function updateChart() {
+        timeSeries.clear();
+        var impl = WaveformDataModelManager.impl;
+        var samples = impl.samples;
+        var count = samples.length;
+        if (count === 0) return;
+
+        var xMin = impl.xMin;
+        var xMax = impl.xMax;
+        var range = xMax - xMin;
+        for (var i = 0; i < count; i++) {
+            timeSeries.append(xMin + range * i / (count - 1), samples[i]);
+        }
+    }
+
+    ColumnLayout {
         anchors.fill: parent
         anchors.margins: 10
         spacing: 10
 
-        Rectangle{
+        Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
             color: "#1e1e2e"
@@ -24,20 +51,35 @@ Item {
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.margins: 10
+                z: 1
             }
 
-            WaveformItem {
+            GraphsView {
                 id: timeDomainChart
                 anchors.fill: parent
-                anchors.margins: 30  // 留出坐标轴空间
+                anchors.margins: 10
+                anchors.topMargin: 40
 
-                // 测试数据：正弦波
-                samples: {
-                    var data = [];
-                    for (var i = 0; i < 200; i++) {
-                        data.push(Math.sin(i * 0.1) * 100);
-                    }
-                    return data;
+                axisX: ValueAxis {
+                    id: xAxis
+                    min: WaveformDataModelManager.impl.xMin
+                    max: WaveformDataModelManager.impl.xMax
+                    tickInterval: WaveformDataModelManager.impl.xTickCount
+                    subTickCount: WaveformDataModelManager.impl.xSubTickCount
+                }
+
+                axisY: ValueAxis {
+                    id: yAxis
+                    min: WaveformDataModelManager.impl.yMin
+                    max: WaveformDataModelManager.impl.yMax
+                    tickInterval: WaveformDataModelManager.impl.yTickCount
+                    subTickCount: WaveformDataModelManager.impl.ySubTickCount
+                }
+
+                LineSeries {
+                    id: timeSeries
+                    color: "#00ff00"
+                    width: 2
                 }
             }
         }
@@ -55,9 +97,9 @@ Item {
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.margins: 10
+                z: 1
             }
-
-            // 后续将替换为 WaveformItem
         }
-}
+    }
+
 }
