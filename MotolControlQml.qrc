@@ -14,6 +14,7 @@
         <file>MotolControlQmlContent/LeftPanel.qml</file>
         <file>MotolControlQmlContent/Screen01.ui.qml</file>
         <file>MotolControlQmlContent/SwitchMy.ui.qml</file>
+        <file>python/config.json</file>
         <file>qtquickcontrols2.conf</file>
     </qresource>
 </RCC>

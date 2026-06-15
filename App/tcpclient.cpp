@@ -5,6 +5,7 @@ TcpClient::TcpClient(QObject *parent)
     : QObject{parent}
     , m_hostAddress(ConstantConfig::DEFAULT_IP)
     , m_isConnected(false)
+    , m_waveformDataEnabled(false)
 {
     addConnectionPort(ConstantConfig::DEFAULT_PORT_1);
     addConnectionPort(ConstantConfig::DEFAULT_PORT_2);
@@ -57,7 +58,7 @@ void TcpClient::disconnectFromServer()
     for(const SocketConnect *conn : std::as_const(m_socketConnects)){
         if(conn->socket->state() == QAbstractSocket::ConnectedState){
             conn->socket->disconnectFromHost();
-        }   
+        }
     }
 }
 
@@ -93,9 +94,20 @@ void TcpClient::onReadyRead()
         return;
     }
 
-    QByteArray data = socket->readAll();
-    QString message = QString::fromUtf8(data);
-    qDebug() << "[TcpClient:" << socket->socketDescriptor() << "] 接收消息:" << message;
+    quint16 sourcePort;
+    for(const SocketConnect *conn : std::as_const(m_socketConnects)){
+        if(conn->socket == socket){
+            sourcePort = conn->port;
+            break;
+        }
+    }
+
+    if(!m_waveformDataEnabled && ConstantConfig::DEFAULT_PORT_2 == sourcePort){
+        QByteArray data = socket->readAll();
+        qDebug() << "[TcpClient] 波形接收已关闭，丢弃端口503数据:" << data.size() << "bytes";
+        return;
+    }
+
 }
 
 void TcpClient::onConnected()
@@ -156,7 +168,7 @@ void TcpClient::onErrorOccurred(QAbstractSocket::SocketError socketError)
         }
     }
     updateConnectedStatus();
-    
+
 }
 
 void TcpClient::updateConnectedStatus()
@@ -175,4 +187,18 @@ void TcpClient::updateConnectedStatus()
         qDebug() << "连接状态更新:" << m_isConnected;
     }
 
+}
+
+bool TcpClient::waveformDataEnabled() const
+{
+    return m_waveformDataEnabled;
+}
+
+void TcpClient::setWaveformDataEnabled(bool newWaveformDataEnabled)
+{
+    if (m_waveformDataEnabled == newWaveformDataEnabled)
+        return;
+    m_waveformDataEnabled = newWaveformDataEnabled;
+    qDebug() << "波形接收已设置为:" << newWaveformDataEnabled;
+    emit waveformDataEnabledChanged();
 }

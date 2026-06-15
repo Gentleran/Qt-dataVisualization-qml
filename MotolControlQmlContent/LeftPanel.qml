@@ -144,6 +144,37 @@ Rectangle {
 
         SectionHeader {
             Layout.fillWidth: true
+            titleText: "波形"
+        }
+
+        GridLayout{
+            Layout.leftMargin: 8 // 内部左边距
+            Layout.rightMargin: 8 // 内部右边距
+            Layout.bottomMargin: 10
+            Layout.fillWidth: true
+
+            columns: 2
+
+            Label {
+                text: "波形接收"
+                font.pixelSize: 26
+                color: "#333333"
+                Layout.alignment: Qt.AlignVCenter // 垂直居中
+                Layout.fillWidth: true
+            }
+
+            SwitchMy {
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                checked: TcpClientManager.impl.waveformDataEnabled
+                onCheckedChanged: {
+                    TcpClientManager.impl.waveformDataEnabled = checked
+                }
+
+            }
+        }
+
+        SectionHeader {
+            Layout.fillWidth: true
             titleText: "录波"
         }
 

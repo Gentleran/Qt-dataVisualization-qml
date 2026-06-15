@@ -1,0 +1,18 @@
+{
+    "server": {
+        "host": "127.0.0.1",
+        "port_502_enabled": true,
+        "port_503_enabled": true
+    },
+    "waveform": {
+        "send_interval_ms": 33,
+        "samples_per_packet": 20,
+        "num_channels": 16,
+        "y_min": -10.0,
+        "y_max": 10.0,
+        "period": 6.2832,
+        "amplitude": 8.0,
+        "phase_offset_per_channel": 0.3927,
+        "noise_amplitude": 0.5
+    }
+}

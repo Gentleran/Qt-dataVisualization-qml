@@ -11,7 +11,7 @@ class TcpClient : public QObject
 
     Q_PROPERTY(QString hostAddress READ hostAddress WRITE setHostAddress NOTIFY hostAddressChanged)
     Q_PROPERTY(bool connected READ isConnected NOTIFY connectedChanged)
-
+    Q_PROPERTY(bool waveformDataEnabled READ waveformDataEnabled WRITE setWaveformDataEnabled NOTIFY waveformDataEnabledChanged)
 public:
     explicit TcpClient(QObject *parent = nullptr);       
     ~TcpClient();   
@@ -28,10 +28,15 @@ public:
 
     void addConnectionPort(quint16 port);
 
+    bool waveformDataEnabled() const;
+    void setWaveformDataEnabled(bool newWaveformDataEnabled);
+
 signals:
     void hostAddressChanged();               
 
-    void connectedChanged();                  
+    void connectedChanged();
+
+    void waveformDataEnabledChanged();
 
 private slots:
     void onReadyRead();             // 处理可读数据
@@ -52,6 +57,7 @@ private:
 
     void updateConnectedStatus();
 
+    bool m_waveformDataEnabled;
 };
 
 #endif // TCPCLIENT_H
