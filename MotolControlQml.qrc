@@ -4,11 +4,9 @@
         <file>MotolControlQml/Constants.qml</file>
         <file>MotolControlQml/EventListModel.qml</file>
         <file>MotolControlQml/EventListSimulator.qml</file>
+        <file>MotolControlQml/Managers.qml</file>
+        <file>MotolControlQml/Mocks.qml</file>
         <file>MotolControlQml/qmldir</file>
-        <file>MotolControlQml/TcpClientManager.qml</file>
-        <file>MotolControlQml/TcpClientMock.qml</file>
-        <file>MotolControlQml/WaveformDataModelManager.qml</file>
-        <file>MotolControlQml/WaveformDataModelMock.qml</file>
         <file>MotolControlQmlContent/App.qml</file>
         <file>MotolControlQmlContent/ChartPannel.qml</file>
         <file>MotolControlQmlContent/LeftPanel.qml</file>

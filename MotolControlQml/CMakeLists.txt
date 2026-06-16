@@ -6,22 +6,12 @@ set_source_files_properties(Constants.qml
         QT_QML_SINGLETON_TYPE true
 )
 
-set_source_files_properties(TcpClientManager.qml
+set_source_files_properties(Managers.qml
     PROPERTIES
         QT_QML_SINGLETON_TYPE true
 )
 
-set_source_files_properties(TcpClientMock.qml
-    PROPERTIES
-        QT_QML_SINGLETON_TYPE true
-)
-
-set_source_files_properties(WaveformDataModelManager.qml
-    PROPERTIES
-        QT_QML_SINGLETON_TYPE true
-)
-
-set_source_files_properties(WaveformDataModelMock.qml
+set_source_files_properties(Mocks.qml
     PROPERTIES
         QT_QML_SINGLETON_TYPE true
 )
@@ -37,10 +27,8 @@ qt6_add_qml_module(MotolControlQml
         "Constants.qml"
         "EventListModel.qml"
         "EventListSimulator.qml"
-        "TcpClientManager.qml"
-        "TcpClientMock.qml"
-        "WaveformDataModelManager.qml"
-        "WaveformDataModelMock.qml"
+        "Managers.qml"
+        "Mocks.qml"
 )
 
 

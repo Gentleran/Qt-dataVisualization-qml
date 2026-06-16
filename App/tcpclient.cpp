@@ -9,6 +9,8 @@ TcpClient::TcpClient(QObject *parent)
 {
     addConnectionPort(ConstantConfig::DEFAULT_PORT_1);
     addConnectionPort(ConstantConfig::DEFAULT_PORT_2);
+
+    m_channelBuffer.reserve(ConstantConfig::WAVEFORM_PACKET_SIZE_BYTES * 5);
 }
 
 TcpClient::~TcpClient()
@@ -94,7 +96,7 @@ void TcpClient::onReadyRead()
         return;
     }
 
-    quint16 sourcePort;
+    quint16 sourcePort=0;
     for(const SocketConnect *conn : std::as_const(m_socketConnects)){
         if(conn->socket == socket){
             sourcePort = conn->port;
@@ -109,6 +111,13 @@ void TcpClient::onReadyRead()
     }
 
 }
+
+
+void TcpClient::parseWaveformData(const QByteArray &rawPacket)
+{
+
+}
+
 
 void TcpClient::onConnected()
 {
@@ -188,6 +197,8 @@ void TcpClient::updateConnectedStatus()
     }
 
 }
+
+
 
 bool TcpClient::waveformDataEnabled() const
 {

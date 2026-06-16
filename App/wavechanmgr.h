@@ -1,5 +1,5 @@
-#ifndef WAVEFORMDATAMODEL_H
-#define WAVEFORMDATAMODEL_H
+#ifndef WAVECHANMGR_H
+#define WAVECHANMGR_H
 
 #include <QObject>
 #include <QQmlEngine>
@@ -7,10 +7,10 @@
 #include <QVector>
 #include "ConstantConfig.h"
 
-class WaveformDataModel : public QObject
+class WaveChanMgr : public QObject
 {
     Q_OBJECT
-    QML_ELEMENT
+
 
     Q_PROPERTY(float xMin READ xMin WRITE setXMin NOTIFY xMinChanged)   // X轴最小值
     Q_PROPERTY(float xMax READ xMax WRITE setXMax NOTIFY xMaxChanged)   // X轴最大值
@@ -25,7 +25,7 @@ class WaveformDataModel : public QObject
     Q_PROPERTY(QVector<float> samples READ samples WRITE setSamples NOTIFY samplesChanged)   // 样本数据
 
 public:
-    explicit WaveformDataModel(QObject *parent = nullptr);
+    explicit WaveChanMgr(QObject *parent = nullptr);
 
     float xMin() const;
     void setXMin(float val);
@@ -93,4 +93,4 @@ private:
 
 };
 
-#endif // WAVEFORMDATAMODEL_H
+#endif // WAVECHANMGR_H

@@ -8,7 +8,7 @@
 #include "autogen/environment.h"
 
 #include "tcpclient.h"
-#include "waveformdatamodel.h"
+#include "wavechanmgr.h"
 
 int main(int argc, char *argv[])
 {
@@ -24,11 +24,11 @@ int main(int argc, char *argv[])
         "TcpClient",
         tcpClient);
 
-    WaveformDataModel *waveformDataModel = new WaveformDataModel(&engine);
-    qmlRegisterSingletonInstance<WaveformDataModel>(
+    WaveChanMgr *waveformDataModel = new WaveChanMgr(&engine);
+    qmlRegisterSingletonInstance<WaveChanMgr>(
         "MotolControlQml",
         1, 0,
-        "WaveformDataModel",
+        "WaveChanMgr",
         waveformDataModel);
 
     const QUrl url(mainQmlFile);

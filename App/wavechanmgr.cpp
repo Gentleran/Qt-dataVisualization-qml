@@ -1,21 +1,21 @@
-#include "waveformdatamodel.h"
+#include "wavechanmgr.h"
 
-WaveformDataModel::WaveformDataModel(QObject *parent)
+WaveChanMgr::WaveChanMgr(QObject *parent)
     : QObject(parent)
 {
-    connect(&m_timer, &QTimer::timeout, this, &WaveformDataModel::onTimeout);
+    connect(&m_timer, &QTimer::timeout, this, &WaveChanMgr::onTimeout);
     m_timer.setInterval(33);
     generateData();
     m_timer.start();
     m_running = true;
 }
 
-float WaveformDataModel::xMin() const
+float WaveChanMgr::xMin() const
 {
     return m_xMin;
 }
 
-void WaveformDataModel::setXMin(float val)
+void WaveChanMgr::setXMin(float val)
 {
     if (qFuzzyCompare(m_xMin, val))
         return;
@@ -23,12 +23,12 @@ void WaveformDataModel::setXMin(float val)
     emit xMinChanged();
 }
 
-float WaveformDataModel::xMax() const
+float WaveChanMgr::xMax() const
 {
     return m_xMax;
 }
 
-void WaveformDataModel::setXMax(float val)
+void WaveChanMgr::setXMax(float val)
 {
     if (qFuzzyCompare(m_xMax, val))
         return;
@@ -36,12 +36,12 @@ void WaveformDataModel::setXMax(float val)
     emit xMaxChanged();
 }
 
-float WaveformDataModel::yMin() const
+float WaveChanMgr::yMin() const
 {
     return m_yMin;
 }
 
-void WaveformDataModel::setYMin(float val)
+void WaveChanMgr::setYMin(float val)
 {
     if (qFuzzyCompare(m_yMin, val))
         return;
@@ -49,12 +49,12 @@ void WaveformDataModel::setYMin(float val)
     emit yMinChanged();
 }
 
-float WaveformDataModel::yMax() const
+float WaveChanMgr::yMax() const
 {
     return m_yMax;
 }
 
-void WaveformDataModel::setYMax(float val)
+void WaveChanMgr::setYMax(float val)
 {
     if (qFuzzyCompare(m_yMax, val))
         return;
@@ -62,12 +62,12 @@ void WaveformDataModel::setYMax(float val)
     emit yMaxChanged();
 }
 
-int WaveformDataModel::xTickCount() const
+int WaveChanMgr::xTickCount() const
 {
     return m_xTickCount;
 }
 
-void WaveformDataModel::setXTickCount(int count)
+void WaveChanMgr::setXTickCount(int count)
 {
     if (m_xTickCount == count)
         return;
@@ -75,12 +75,12 @@ void WaveformDataModel::setXTickCount(int count)
     emit xTickCountChanged();
 }
 
-int WaveformDataModel::yTickCount() const
+int WaveChanMgr::yTickCount() const
 {
     return m_yTickCount;
 }
 
-void WaveformDataModel::setYTickCount(int count)
+void WaveChanMgr::setYTickCount(int count)
 {
     if (m_yTickCount == count)
         return;
@@ -88,12 +88,12 @@ void WaveformDataModel::setYTickCount(int count)
     emit yTickCountChanged();
 }
 
-int WaveformDataModel::xSubTickCount() const
+int WaveChanMgr::xSubTickCount() const
 {
     return m_xSubTickCount;
 }
 
-void WaveformDataModel::setXSubTickCount(int count)
+void WaveChanMgr::setXSubTickCount(int count)
 {
     if (m_xSubTickCount == count)
         return;
@@ -101,12 +101,12 @@ void WaveformDataModel::setXSubTickCount(int count)
     emit xSubTickCountChanged();
 }
 
-int WaveformDataModel::ySubTickCount() const
+int WaveChanMgr::ySubTickCount() const
 {
     return m_ySubTickCount;
 }
 
-void WaveformDataModel::setYSubTickCount(int count)
+void WaveChanMgr::setYSubTickCount(int count)
 {
     if (m_ySubTickCount == count)
         return;
@@ -114,12 +114,12 @@ void WaveformDataModel::setYSubTickCount(int count)
     emit ySubTickCountChanged();
 }
 
-bool WaveformDataModel::running() const
+bool WaveChanMgr::running() const
 {
     return m_running;
 }
 
-void WaveformDataModel::setRunning(bool newRunning)
+void WaveChanMgr::setRunning(bool newRunning)
 {
     if (m_running == newRunning)
         return;
@@ -127,12 +127,12 @@ void WaveformDataModel::setRunning(bool newRunning)
     emit runningChanged();
 }
 
-QVector<float> WaveformDataModel::samples() const
+QVector<float> WaveChanMgr::samples() const
 {
     return m_samples;
 }
 
-void WaveformDataModel::setSamples(const QVector<float> &newSamples)
+void WaveChanMgr::setSamples(const QVector<float> &newSamples)
 {
     if (m_samples == newSamples)
         return;
@@ -140,7 +140,7 @@ void WaveformDataModel::setSamples(const QVector<float> &newSamples)
     emit samplesChanged();
 }
 
-void WaveformDataModel::generateData()
+void WaveChanMgr::generateData()
 {
     m_samples.resize(200);
     float xRange = m_xMax - m_xMin;
@@ -154,7 +154,7 @@ void WaveformDataModel::generateData()
 
 }
 
-void WaveformDataModel::onTimeout()
+void WaveChanMgr::onTimeout()
 {
     generateData();
 }

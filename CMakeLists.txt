@@ -23,19 +23,12 @@ qt_standard_project_setup()
 qt_add_executable(${CMAKE_PROJECT_NAME}
     App/tcpclient.h App/tcpclient.cpp
     App/ConstantConfig.h
-    App/waveformdatamodel.h App/waveformdatamodel.cpp
+    App/wavechanmgr.h App/wavechanmgr.cpp
 )
 qt_add_resources(${CMAKE_PROJECT_NAME} "configuration"
     PREFIX "/"
     FILES
         qtquickcontrols2.conf)
-
-qt_add_qml_module(${CMAKE_PROJECT_NAME}
-    URI WaveformDataModel
-    VERSION 1.0
-    SOURCES
-        App/waveformdatamodel.h App/waveformdatamodel.cpp
-)
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/App)
 

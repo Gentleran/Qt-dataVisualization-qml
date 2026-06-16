@@ -105,12 +105,12 @@ Rectangle {
             // 右侧开关
             SwitchMy {
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
-                checked: TcpClientManager.impl.connected
+                checked: Managers.tcpImpl.connected
                 onCheckedChanged: {
                     if(checked){
-                        TcpClientManager.connectToServer()
+                        Managers.connectToServer()
                     } else if(!checked){
-                        TcpClientManager.disconnectFromServer()
+                        Managers.disconnectFromServer()
                     }
                 }
 
@@ -126,9 +126,9 @@ Rectangle {
             TextField {
                 id: ipAddressField
                 placeholderText: "请输入IP地址"
-                text: TcpClientManager.impl.hostAddress
+                text: Managers.tcpImpl.hostAddress
                 onTextChanged: {
-                    TcpClientManager.impl.hostAddress = text
+                    Managers.tcpImpl.hostAddress = text
                 }
                 Layout.fillWidth: true
                 Layout.preferredHeight: 50
@@ -165,9 +165,9 @@ Rectangle {
 
             SwitchMy {
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
-                checked: TcpClientManager.impl.waveformDataEnabled
+                checked: Managers.tcpImpl.waveformDataEnabled
                 onCheckedChanged: {
-                    TcpClientManager.impl.waveformDataEnabled = checked
+                    Managers.tcpImpl.waveformDataEnabled = checked
                 }
 
             }

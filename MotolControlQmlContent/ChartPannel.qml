@@ -4,11 +4,12 @@ import QtQuick.Layouts
 import QtGraphs
 import MotolControlQml
 
-Item {
+Rectangle {
     id: root
+    color: "#2b2b3e"
 
     Connections {
-        target: WaveformDataModelManager.impl
+        target: Managers.waveformImpl
         function onSamplesChanged() {
             updateChart();
         }
@@ -20,7 +21,7 @@ Item {
 
     function updateChart() {
         timeSeries.clear();
-        var impl = WaveformDataModelManager.impl;
+        var impl = Managers.waveformImpl;
         var samples = impl.samples;
         var count = samples.length;
         if (count === 0) return;
@@ -62,18 +63,18 @@ Item {
 
                 axisX: ValueAxis {
                     id: xAxis
-                    min: WaveformDataModelManager.impl.xMin
-                    max: WaveformDataModelManager.impl.xMax
-                    tickInterval: WaveformDataModelManager.impl.xTickCount
-                    subTickCount: WaveformDataModelManager.impl.xSubTickCount
+                    min: Managers.waveformImpl.xMin
+                    max: Managers.waveformImpl.xMax
+                    tickInterval: Managers.waveformImpl.xTickCount
+                    subTickCount: Managers.waveformImpl.xSubTickCount
                 }
 
                 axisY: ValueAxis {
                     id: yAxis
-                    min: WaveformDataModelManager.impl.yMin
-                    max: WaveformDataModelManager.impl.yMax
-                    tickInterval: WaveformDataModelManager.impl.yTickCount
-                    subTickCount: WaveformDataModelManager.impl.ySubTickCount
+                    min: Managers.waveformImpl.yMin
+                    max: Managers.waveformImpl.yMax
+                    tickInterval: Managers.waveformImpl.yTickCount
+                    subTickCount: Managers.waveformImpl.ySubTickCount
                 }
 
                 LineSeries {
