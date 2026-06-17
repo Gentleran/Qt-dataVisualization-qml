@@ -38,6 +38,9 @@ signals:
 
     void waveformDataEnabledChanged();
 
+    void waveformDataReceived(const QVector<QVector<float>> &channelData);
+
+
 private slots:
     void onReadyRead();             // 处理可读数据
     void onConnected();             // 处理连接成功

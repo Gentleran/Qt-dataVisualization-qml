@@ -3,11 +3,11 @@
 WaveChanMgr::WaveChanMgr(QObject *parent)
     : QObject(parent)
 {
-    connect(&m_timer, &QTimer::timeout, this, &WaveChanMgr::onTimeout);
-    m_timer.setInterval(33);
-    generateData();
-    m_timer.start();
-    m_running = true;
+    // connect(&m_timer, &QTimer::timeout, this, &WaveChanMgr::onTimeout);
+    // m_timer.setInterval(33);
+    // generateData();
+    // m_timer.start();
+    m_running = false;
 }
 
 float WaveChanMgr::xMin() const
@@ -137,6 +137,16 @@ void WaveChanMgr::setSamples(const QVector<float> &newSamples)
     if (m_samples == newSamples)
         return;
     m_samples = newSamples;
+    emit samplesChanged();
+}
+
+void WaveChanMgr::onWaveformDataReceived(const QVector<QVector<float>> &channelData)
+{
+    // if(channelData.size() != 2){
+    //     qDebug() << "onWaveformDataReceived: 通道数据数量错误";
+    //     return;
+    // }
+    setSamples(channelData[0]);
     emit samplesChanged();
 }
 

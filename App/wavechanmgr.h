@@ -57,6 +57,8 @@ public:
     QVector<float> samples() const;
     void setSamples(const QVector<float> &newSamples);
 
+    void onWaveformDataReceived(const QVector<QVector<float>> &channelData);
+
     Q_INVOKABLE void generateData();
 
 signals:
@@ -72,6 +74,8 @@ signals:
     void runningChanged();
 
     void samplesChanged();
+
+    
 
 private slots:
     void onTimeout();

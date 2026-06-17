@@ -104,10 +104,20 @@ void TcpClient::onReadyRead()
         }
     }
 
-    if(!m_waveformDataEnabled && ConstantConfig::DEFAULT_PORT_2 == sourcePort){
-        QByteArray data = socket->readAll();
-        qDebug() << "[TcpClient] 波形接收已关闭，丢弃端口503数据:" << data.size() << "bytes";
-        return;
+    QByteArray data = socket->readAll();
+    if(ConstantConfig::DEFAULT_PORT_2 == sourcePort){
+        if(!m_waveformDataEnabled){
+            qDebug() << "onReadyRead: 波形接收已关闭，丢弃端口503数据:" << data.size() << "bytes";
+            return;
+        }
+
+        m_channelBuffer.append(data);
+        const quint16 packetSize = ConstantConfig::WAVEFORM_PACKET_SIZE_BYTES;
+        while(m_channelBuffer.size() >= packetSize){
+            QByteArray packet = m_channelBuffer.left(packetSize);
+            m_channelBuffer.remove(0,packetSize);
+            parseWaveformData(packet);
+        }
     }
 
 }
@@ -115,7 +125,40 @@ void TcpClient::onReadyRead()
 
 void TcpClient::parseWaveformData(const QByteArray &rawPacket)
 {
+    // 解析波形数据包 16
+    const quint16 numChannels = ConstantConfig::WAVEFORM_NUM_CHANNELS;
+    // 每个通道的样本数 20
+    const quint16 samplesPerPacket = ConstantConfig::WAVEFORM_SAMPLES_PER_PACKET;
+    // 每个通道的样本数 1280
+    const quint16 packetSize = ConstantConfig::WAVEFORM_PACKET_SIZE_BYTES;
 
+    if(rawPacket.size() != packetSize){
+        qDebug() << "parseWaveformData: 数据包大小错误" << rawPacket.size() << "bytes";
+        return;
+    }
+
+    // 解析数据流
+    QDataStream stream(rawPacket);
+    stream.setByteOrder(QDataStream::LittleEndian);
+    stream.setFloatingPointPrecision(QDataStream::SinglePrecision);
+    
+    // 通道数据缓冲区
+    QVector<QVector<float>> channelData(numChannels);
+    for(quint16 i=0;i<numChannels;i++){
+        channelData[i].reserve(samplesPerPacket);
+    }
+
+    // 解析每个通道的样本数据
+    for(int sampleIdx=0;sampleIdx<samplesPerPacket;sampleIdx++){
+        for(int ch=0;ch<numChannels;ch++){
+            float sample;
+            stream >> sample;
+            channelData[ch].append(sample);
+        }
+    }
+    
+    // 发送解析后的数据
+    emit waveformDataReceived(channelData);
 }
 
 

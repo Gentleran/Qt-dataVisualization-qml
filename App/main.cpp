@@ -31,6 +31,8 @@ int main(int argc, char *argv[])
         "WaveChanMgr",
         waveformDataModel);
 
+    
+
     const QUrl url(mainQmlFile);
     QObject::connect(
                 &engine, &QQmlApplicationEngine::objectCreated, &app,
@@ -38,6 +40,8 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
+
+    QObject::connect(tcpClient, &TcpClient::waveformDataReceived, waveformDataModel, &WaveChanMgr::onWaveformDataReceived);
 
     engine.addImportPath(QCoreApplication::applicationDirPath() + "/qml");
     engine.addImportPath(":/");
